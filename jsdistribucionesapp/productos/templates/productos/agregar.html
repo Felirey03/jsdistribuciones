@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Agregar producto</h1>
+    <form action="{{ url_for('productos.agregar') }}" method="post">
+        <input type="text" name="nombre" placeholder="Nombre" required="required">
+        <input type="number" name="precio" placeholder="precio" required="required">
+        <input type="text" name="stock" placeholder="Stock">
+        <input type="submit" value="Agregar">
+    </form>
+
+
+{% endblock %}

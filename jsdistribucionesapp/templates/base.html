@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSdistribuciones</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Flowbite -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+
+</head>
+<body body class="bg-[#F4F1EC] text-[#1F1F1F] min-h-screen">
+
+
+   <header class="bg-[#E8E1D6] border-b border-[#D6CDBF] py-5 shadow-sm">
+  <nav class="mx-auto max-w-4xl">
+    <div class="grid grid-cols-5 items-center">
+
+      <!-- Izquierda -->
+      <div class="flex justify-end gap-6 col-span-2 text-xl font-semibold text-[#1F1F1F]">
+        <a href="/" class="hover:text-[#C9A24D] transition">
+          Inicio
+        </a>
+        <a href="/productos" class="hover:text-[#C9A24D] transition">
+          Productos
+        </a>
+      </div>
+
+      <!-- Logo -->
+      <div class="flex justify-center">
+        <img
+          src="{{ url_for('static', filename='uploads/productos/logo.jpeg') }}"
+          alt="JS Distribuciones"
+          class="h-14"
+        >
+      </div>
+
+      <!-- Derecha -->
+      <div class="flex justify-start gap-6 col-span-2 text-xl font-semibold text-[#1F1F1F]">
+        <a href="#" class="hover:text-[#C9A24D] transition">
+          Clientes
+        </a>
+        <a href="#" class="hover:text-[#C9A24D] transition">
+          Remitos
+        </a>
+      </div>
+
+    </div>
+  </nav>
+</header>
+
+
+
+    <!-- <header class="bg-blue-900 text-white p-4">
+    <nav class="flex gap-6 text-lg">
+        <a href="/">Inicio</a>
+        <a href="/productos">Productos</a>
+    </nav>
+    </header> -->
+
+
+    <main class="p-6">
+    {% block content %}
+
+
+
+    {% endblock %}
+    </main>
+
+    
+</body>
+</html>
