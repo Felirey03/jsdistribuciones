@@ -2,14 +2,54 @@
 
 {% block content %}
 
-<ul>
+<div class="max-w-3xl mx-auto mt-10">
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-semibold">
+      Productos
+    </h1>
+
+    <a href="{{ url_for('productos.agregar') }}"
+       class="bg-[#C9A24D] hover:bg-[#A8862D]
+              text-white text-lg font-semibold
+              px-6 py-3 rounded-xl
+              transition shadow-md">
+      Agregar producto
+    </a>
+  </div>
+
+  <div class="flex flex-col gap-4">
+
     {% for producto in productos %}
+      <div class="bg-[#E2DACF]
+                  border border-[#CFC6B8]
+                  rounded-xl
+                  px-3 py-2
+                  shadow-sm
+                  flex justify-between items-center">
 
-        <li>{{ producto.nombre }}</li>
+        <span class="text-l font-medium">
+            {{ producto.nombre }} 
+        </span>
+        <span class="text-l font-medium">
+            {{ producto.stock }} 
+        </span>
+        <span class="text-l font-medium">
+            ${{ producto.precio }}  
+        </span>
+        <span class="text-l font-medium">
+            <a href="{{ url_for('productos.editar', id=producto.pid) }}">
+                Editar
+            </a>
+        </span>
+        
 
+        
+      </div>
     {% endfor %}
-</ul>
 
-<a href="{{ url_for('productos.agregar') }}">Agregar</a>
+  </div>
+
+</div>
 
 {% endblock %}

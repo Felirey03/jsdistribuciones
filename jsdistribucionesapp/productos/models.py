@@ -7,4 +7,7 @@ class Producto(db.Model):
     nombre = db.Column(db.String, nullable=True)
     precio = db.Column(db.Float, nullable=False)
     stock = db.Column(db.String, default=0)
+    departamento = db.Column(db.String)
+
+    
 
