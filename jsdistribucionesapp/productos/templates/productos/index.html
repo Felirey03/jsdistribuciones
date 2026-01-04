@@ -8,6 +8,59 @@
     <h1 class="text-3xl font-semibold">
       Productos
     </h1>
+    <form class="max-w-3xl mx-auto">
+  <div class="flex rounded-xl shadow-md overflow-hidden
+              bg-[#E2DACF]
+              border border-[#CFC6B8]">
+
+    <!-- Dropdown -->
+    <button type="button"
+      class="flex items-center gap-2
+             px-4 py-3
+             text-[#1F1F1F] font-medium
+             bg-[#DED5C6]
+             border-r border-[#CFC6B8]
+             hover:bg-[#D6CCBE]
+             focus:outline-none">
+
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 4h6v6H9zM4 4h4v6H4zM4 14h4v6H4zM9 14h6v6H9zM16 4h4v6h-4zM16 14h4v6h-4z"/>
+      </svg>
+
+      Categoría
+    </button>
+
+    <!-- Input -->
+    <input
+      type="search"
+      placeholder="Buscar producto…"
+      class="flex-1 px-4 py-3
+             bg-[#F4F1EC]
+             text-[#1F1F1F]
+             placeholder:text-[#6B6B6B]
+             focus:outline-none">
+
+    <!-- Botón buscar -->
+    <button type="submit"
+      class="flex items-center gap-2
+             px-6 py-3
+             font-semibold
+             text-white
+             bg-[#C9A24D]
+             hover:bg-[#B38E3C]
+             transition">
+
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-width="2"
+              d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+      </svg>
+
+      Buscar
+    </button>
+  </div>
+</form>
+  
 
     <a href="{{ url_for('productos.agregar') }}"
        class="bg-[#C9A24D] hover:bg-[#A8862D]
@@ -18,37 +71,71 @@
     </a>
   </div>
 
-  <div class="flex flex-col gap-4">
+  <div class="bg-[#E2DACF]
+            border border-[#CFC6B8]
+            rounded-xl
+            shadow-md
+            overflow-hidden
+            max-w-4xl mx-auto">
+
+  
+
+  <!-- Header fijo -->
+  <div class="grid grid-cols-6 gap-4 px-4 py-3
+              bg-[#D6CCBE]
+              font-semibold">
+    <div></div>
+    <div>Producto</div>
+    <div class="text-center">Stock</div>
+    <div class="text-center">Precio</div>
+    <div class="text-center col-span-2">Acciones</div>
+  </div>
+
+  <!-- Zona scrolleable -->
+  <div class="max-h-[420px] overflow-y-auto">
 
     {% for producto in productos %}
-      <div class="bg-[#E2DACF]
-                  border border-[#CFC6B8]
-                  rounded-xl
-                  px-3 py-2
-                  shadow-sm
-                  flex justify-between items-center">
+      <div class="grid grid-cols-6 gap-4 px-4 py-3
+                  border-t border-[#CFC6B8]
+                  items-center
+                  hover:bg-[#ECE7DF] transition">
 
-        <span class="text-l font-medium">
-            {{ producto.nombre }} 
-        </span>
-        <span class="text-l font-medium">
-            {{ producto.stock }} 
-        </span>
-        <span class="text-l font-medium">
-            ${{ producto.precio }}  
-        </span>
-        <span class="text-l font-medium">
-            <a href="{{ url_for('productos.editar', id=producto.pid) }}">
-                Editar
-            </a>
-        </span>
-        
+        <input type="checkbox" value="{{ producto.pid }}">
 
-        
+        <div class="font-medium">
+          {{ producto.nombre }}
+        </div>
+
+        <div class="text-center">
+          {{ producto.stock }}
+        </div>
+
+        <div class="text-center">
+          ${{ producto.precio }}
+        </div>
+
+        <a href="{{ url_for('productos.editar', id=producto.pid) }}"
+           class="text-[#8B6B2E] font-semibold text-center hover:underline">
+          Editar
+        </a>
+
+        <form action="{{ url_for('productos.eliminar', id=producto.pid) }}"
+              method="post"
+              class="text-center">
+          <button
+            type="submit"
+            class="text-red-600 hover:text-red-800 font-semibold">
+            Eliminar
+          </button>
+        </form>
+
       </div>
     {% endfor %}
 
   </div>
+</div>
+
+
 
 </div>
 

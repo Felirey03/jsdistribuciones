@@ -8,7 +8,7 @@ productos = Blueprint("productos",__name__,template_folder='templates')
 
 @productos.route('/')
 def index():
-    productos = Producto.query.order_by(Producto.nombre.asc()).all()
+    productos = Producto.query.order_by(Producto.nombre).all()
     return render_template('productos/index.html', productos=productos)
 
 
@@ -43,10 +43,10 @@ def editar(id):
     producto = Producto.query.get_or_404(id)
 
     if request.method == 'POST':
-        producto.nombre = request.get.form('nombre')
-        producto.departamento = request.get.form('departamento')
-        producto.precio = request.get.form('precio')
-        producto.stock = request.get.form('stock')
+        producto.nombre = request.form.get('nombre')
+        producto.departamento = request.form.get('departamento')
+        producto.precio = request.form.get('precio')
+        producto.stock = request.form.get('stock')
 
         db.session.commit()
         return redirect(url_for("productos.index"))
@@ -55,6 +55,13 @@ def editar(id):
 
 
     
+@productos.route('/eliminar/<int:id>', methods=['POST'])
+def eliminar(id):   
+    producto = Producto.query.get_or_404(id)
 
+    db.session.delete(producto)
+    db.session.commit()
+
+    return redirect(url_for('productos.index'))
 
 
