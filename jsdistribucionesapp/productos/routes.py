@@ -5,6 +5,8 @@ from jsdistribucionesapp.app import db
 from jsdistribucionesapp.productos.models import Producto
 
 productos = Blueprint("productos",__name__,template_folder='templates')
+DEPARTAMENTOS = ["yerba", "infusiones", "almacen", "bebidas"]
+
 
 @productos.route('/')
 def index():
@@ -22,8 +24,6 @@ def agregar():
         stock = request.form.get('stock')
         departamento = request.form.get('departamento')
 
-
-
         producto = Producto(
             nombre = nombre,
             departamento = departamento,
@@ -37,24 +37,52 @@ def agregar():
         return redirect(url_for('productos.index'))
     
 
-
 @productos.route('/editar/<int:id>', methods=['GET','POST'])
 def editar(id):
     producto = Producto.query.get_or_404(id)
 
     if request.method == 'POST':
-        producto.nombre = request.get.form('nombre')
-        producto.departamento = request.get.form('departamento')
-        producto.precio = request.get.form('precio')
-        producto.stock = request.get.form('stock')
+        producto.nombre = request.form.get('nombre')
+        producto.departamento = request.form.get('departamento')
+        producto.precio = request.form.get('precio')
+        producto.stock = request.form.get('stock')
 
         db.session.commit()
         return redirect(url_for("productos.index"))
     
-    return render_template('productos/editar.html', producto=producto)
+    return render_template('productos/editar.html', producto=producto, departamentos=DEPARTAMENTOS)
 
 
-    
+
+@productos.route('/eliminar/<int:id>', methods=['POST'])
+def eliminar(id):
+    producto = Producto.query.get_or_404(id)
+
+    db.session.delete(producto)
+    db.session.commit()
+
+    return redirect(url_for('productos.index'))    
+
+
+@productos.route('/cambiar-precio', methods=['POST'])
+def cambiar_precio():
+    ids = request.form.get('ids')
+    nuevo_precio = request.form.get('precio')
+
+    if not ids or not nuevo_precio:
+        return redirect(url_for('productos.index'))
+
+    ids_lista = ids.split(',')
+
+    productos = Producto.query.filter(Producto.pid.in_(ids_lista)).all()
+
+    for producto in productos:
+        producto.precio = nuevo_precio
+
+    db.session.commit()
+
+    return redirect(url_for('productos.index'))
+
 
 
 

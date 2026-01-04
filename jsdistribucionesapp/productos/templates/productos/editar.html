@@ -9,7 +9,7 @@
   <div class="w-full max-w-md bg-[#E2DACF] border border-[#CFC6B8] rounded-2xl shadow-lg p-8">
 
     <h1 class="text-3xl font-semibold text-center mb-8">
-      Agregar producto
+      Editar producto
     </h1>
 
     <form action="{{ url_for('productos.editar', id=producto.pid) }}" method="post" class="flex flex-col gap-6">
@@ -43,14 +43,17 @@
                  focus:ring-[#C9A24D]">
 
           <option value="">Seleccionar…</option>
-          <option value="yerba">Yerba</option>
-          <option value="infusiones">Infusiones</option>
-          <option value="almacen">Almacén</option>
-          <option value="bebidas">Bebidas</option>
-          <option value="limpieza">Limpieza</option>
+          {% for depto in departamentos %}
+            <option value="{{ depto }}"
+              {% if producto.departamento == depto %}selected{% endif %}>
+              {{ depto | capitalize }}
+            </option>
+          {% endfor %}
 
         </select>
       </div>
+
+     
 
       <!-- Precio -->
       <div class="flex flex-col gap-2">
