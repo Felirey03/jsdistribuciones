@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto mt-8">
+
+  <!-- TÍTULO -->
+  <h1 class="text-2xl font-bold text-[#1F1F1F] mb-6">
+    Editar cliente
+  </h1>
+
+  <!-- FORM -->
+  <form action="{{ url_for('clientes.editar', id=cliente.cid) }}"
+        method="post"
+        class="bg-[#E2DACF] border border-[#CFC6B8]
+               rounded-2xl shadow-md p-6 space-y-6">
+
+    <!-- NOMBRE -->
+    <div>
+      <label class="block text-sm font-semibold mb-1">
+        Nombre *
+      </label>
+      <input
+        type="text"
+        name="nombre"
+        value="{{ cliente.nombre }}"
+        required
+        class="w-full px-3 py-2 rounded-lg border border-[#CFC6B8]
+               bg-[#F4EFE9] focus:outline-none
+               focus:ring-2 focus:ring-[#8B6B2E]"
+      >
+    </div>
+
+    <!-- DIRECCIÓN -->
+    <div>
+      <label class="block text-sm font-semibold mb-1">
+        Dirección
+      </label>
+      <input
+        type="text"
+        name="direccion"
+        value="{{ cliente.direccion }}"
+        class="w-full px-3 py-2 rounded-lg border border-[#CFC6B8]
+               bg-[#F4EFE9] focus:outline-none
+               focus:ring-2 focus:ring-[#8B6B2E]"
+      >
+    </div>
+
+    <!-- TELÉFONO -->
+    <div>
+      <label class="block text-sm font-semibold mb-1">
+        Teléfono *
+      </label>
+      <input
+        type="text"
+        name="telefono"
+        value="{{ cliente.telefono }}"
+        required
+        class="w-full px-3 py-2 rounded-lg border border-[#CFC6B8]
+               bg-[#F4EFE9] focus:outline-none
+               focus:ring-2 focus:ring-[#8B6B2E]"
+      >
+    </div>
+
+    <!-- EMAIL -->
+    <div>
+      <label class="block text-sm font-semibold mb-1">
+        Email
+      </label>
+      <input
+        type="email"
+        name="email"
+        value="{{ cliente.email or '' }}"
+        class="w-full px-3 py-2 rounded-lg border border-[#CFC6B8]
+               bg-[#F4EFE9] focus:outline-none
+               focus:ring-2 focus:ring-[#8B6B2E]"
+      >
+    </div>
+
+    <!-- CUIT -->
+    <div>
+      <label class="block text-sm font-semibold mb-1">
+        CUIT
+      </label>
+      <input
+        type="text"
+        name="cuit"
+        value="{{ cliente.cuit }}"
+        class="w-full px-3 py-2 rounded-lg border border-[#CFC6B8]
+               bg-[#F4EFE9] focus:outline-none
+               focus:ring-2 focus:ring-[#8B6B2E]"
+      >
+    </div>
+
+    <!-- ACTIVO -->
+    <div class="flex items-center gap-3">
+      <input
+        type="checkbox"
+        name="activo"
+        id="activo"
+        {% if cliente.activo %}checked{% endif %}
+        class="w-5 h-5 text-[#8B6B2E] focus:ring-[#8B6B2E]"
+      >
+      <label for="activo" class="font-semibold">
+        Cliente activo
+      </label>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="flex justify-end gap-4 pt-4">
+
+      <a href="{{ url_for('clientes.index') }}"
+         class="px-4 py-2 rounded-lg border border-[#CFC6B8]
+                bg-[#F4EFE9] font-semibold hover:bg-[#EFE9E1]">
+        Cancelar
+      </a>
+
+      <button
+        type="submit"
+        class="px-6 py-2 rounded-lg bg-[#8B6B2E]
+               text-white font-semibold hover:bg-[#755824] transition">
+        Guardar cambios
+      </button>
+
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

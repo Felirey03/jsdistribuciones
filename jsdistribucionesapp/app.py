@@ -12,9 +12,11 @@ def create_app():
     db.init_app(app)
 
     from jsdistribucionesapp.core.routes import core
+    from jsdistribucionesapp.clientes.routes import clientes
     from jsdistribucionesapp.productos.routes import productos
 
     app.register_blueprint(core, url_prefix='/')
+    app.register_blueprint(clientes, url_prefix='/clientes')
     app.register_blueprint(productos, url_prefix='/productos')
 
 

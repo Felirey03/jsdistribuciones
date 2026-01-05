@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="max-w-5xl mx-auto mt-6">
+
+  <!-- TÍTULO + BOTÓN -->
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold text-[#1F1F1F]">
+      Clientes
+    </h1>
+
+    <a href="{{ url_for('clientes.agregar') }}"
+       class="bg-[#8B6B2E] text-white px-4 py-2 rounded-lg
+              font-semibold hover:bg-[#755824] transition">
+      + Agregar cliente
+    </a>
+  </div>
+
+  <!-- BUSCADOR -->
+  <div class="mb-4">
+    <input
+      type="text"
+      id="buscador"
+      placeholder="Buscar cliente por nombre, teléfono o CUIT..."
+      class="w-80 px-3 py-2 rounded-lg border border-[#CFC6B8]
+             bg-[#F4EFE9] text-[#1F1F1F]
+             focus:outline-none focus:ring-2 focus:ring-[#8B6B2E]"
+    >
+  </div>
+
+  <!-- CONTENEDOR LISTA -->
+  <div class="bg-[#E2DACF] border border-[#CFC6B8]
+              rounded-2xl shadow-md overflow-hidden">
+
+    <!-- HEADER -->
+    <div class="grid grid-cols-6 gap-4 px-4 py-3
+                font-semibold bg-[#D8CFC2]
+                border-b sticky top-0 z-10">
+      <span>Nombre</span>
+      <span>Teléfono</span>
+      <span class="col-span-2">Dirección</span>
+      <span>Estado</span>
+      <span>Acciones</span>
+    </div>
+
+    <!-- LISTA CON SCROLL -->
+    <div class="max-h-[450px] overflow-y-auto divide-y">
+
+      {% for cliente in clientes %}
+      <div class="grid grid-cols-6 gap-4 items-center
+                  px-4 py-3 hover:bg-[#EFE9E1] cliente-row">
+
+        <span class="font-medium cliente-nombre">
+          {{ cliente.nombre }}
+        </span>
+
+        <span>
+          {{ cliente.telefono }}
+        </span>
+
+        <span class="col-span-2 text-sm text-gray-700">
+          {{ cliente.direccion or "-" }}
+        </span>
+
+        <!-- ESTADO -->
+        {% if cliente.activo == True %}
+          <span class="text-green-700 font-semibold">
+            Activo
+          </span>
+        {% else %}
+          <span class="text-red-700 font-semibold">
+            Inactivo
+          </span>
+        {% endif %}
+
+        <!-- ACCIONES -->
+        <a href="{{ url_for('clientes.editar', id=cliente.cid) }}"
+           class="text-[#8B6B2E] font-semibold hover:underline">
+          Editar
+        </a>
+
+        <form action="{{ url_for('clientes.eliminar', id=cliente.cid) }}"
+              method="post">
+          <button class="text-red-600 font-semibold hover:underline">
+            Eliminar
+          </button>
+        </form>
+
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+<!-- JS BUSCADOR -->
+<script>
+  const buscador = document.getElementById('buscador')
+  const filas = document.querySelectorAll('.cliente-row')
+
+  buscador.addEventListener('keyup', function () {
+    const texto = this.value.toLowerCase()
+
+    filas.forEach(fila => {
+      const nombre = fila.querySelector('.cliente-nombre').innerText.toLowerCase()
+      fila.style.display = nombre.includes(texto) ? '' : 'none'
+    })
+  })
+</script>
+
+
+
+{% endblock %}
