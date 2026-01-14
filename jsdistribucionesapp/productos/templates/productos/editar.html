@@ -71,6 +71,8 @@
                  focus:ring-[#C9A24D]"
         >
       </div>
+        
+
 
       <!-- Stock -->
       <div class="flex flex-col gap-2">
@@ -86,6 +88,11 @@
                  focus:ring-[#C9A24D]"
         >
       </div>
+
+      <a href="{{ url_for('movimiento_stock.historial_producto', producto_id=producto.pid) }}"
+          class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">
+            📊 Ver historial de stock
+        </a>
 
 
       <!-- Botón -->

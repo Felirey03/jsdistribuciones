@@ -7,6 +7,7 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__, template_folder='templates')
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///jsdistribuciones.db'
+    app.config['SECRET_KEY'] = '1234'
 
 
     db.init_app(app)
@@ -14,10 +15,15 @@ def create_app():
     from jsdistribucionesapp.core.routes import core
     from jsdistribucionesapp.clientes.routes import clientes
     from jsdistribucionesapp.productos.routes import productos
+    from jsdistribucionesapp.remitos.routes import remitos
+    from jsdistribucionesapp.movimiento_stock.routes import movimiento_stock
 
     app.register_blueprint(core, url_prefix='/')
     app.register_blueprint(clientes, url_prefix='/clientes')
     app.register_blueprint(productos, url_prefix='/productos')
+    app.register_blueprint(remitos, url_prefix='/remitos')
+    app.register_blueprint(movimiento_stock, url_prefix='/movimiento_stock')
+    
 
 
     migrate = Migrate(app,db)

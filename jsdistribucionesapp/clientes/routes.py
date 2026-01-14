@@ -19,9 +19,10 @@ def agregar():
         nombre = request.form.get('nombre')
         direccion = request.form.get('direccion')
         telefono = request.form.get('telefono')
-        email = request.form.get('emial')
+        email = request.form.get('email')
         cuit = request.form.get('cuit')
-        activo = bool(request.form.get('activo'))
+        activo = True if request.form.get("activo") == "on" else False
+
 
         nuevo_cliente = Cliente(
             nombre=nombre,
@@ -47,7 +48,7 @@ def editar(id):
         cliente.telefono = request.form.get('telefono')
         cliente.email = request.form.get('email')
         cliente.cuit = request.form.get('cuit')
-        cliente.activo = bool(request.form.get('activo'))
+        cliente.activo = request.form.get('activo') is not None
 
 
         db.session.commit()

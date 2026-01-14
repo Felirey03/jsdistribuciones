@@ -6,7 +6,7 @@ class Producto(db.Model):
     pid = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String, nullable=True)
     precio = db.Column(db.Float, nullable=False)
-    stock = db.Column(db.String, default=0)
+    stock = db.Column(db.Integer, default=0)
     departamento = db.Column(db.String)
 
     

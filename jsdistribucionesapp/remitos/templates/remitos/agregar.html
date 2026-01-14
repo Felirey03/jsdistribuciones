@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-5xl mx-auto mt-6">
+
+  <!-- TÍTULO -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-[#1F1F1F]">
+      Nuevo Remito
+    </h1>
+
+    <a href="{{ url_for('remitos.index') }}"
+       class="text-[#8B6B2E] font-semibold hover:underline">
+      ← Volver
+    </a>
+  </div>
+
+  <form method="post" id="remito-form">
+
+    <!-- DATOS GENERALES -->
+    <div class="bg-[#E2DACF] border border-[#CFC6B8] rounded-2xl shadow-md p-6 mb-6">
+
+      <div class="grid grid-cols-2 gap-6">
+
+        <!-- FECHA -->
+        <div>
+          <label class="block text-sm font-semibold mb-1">Fecha</label>
+          <input
+            type="date"
+            name="fecha"
+            class="w-full px-3 py-2 rounded-lg border border-[#CFC6B8]
+                   bg-[#F4EFE9] focus:outline-none
+                   focus:ring-2 focus:ring-[#8B6B2E]"
+          >
+        </div>
+
+        <!-- CLIENTE -->
+        <div>
+          <label class="block text-sm font-semibold mb-1">Cliente *</label>
+          <select
+            name="cliente_id"
+            required
+            class="w-full px-3 py-2 rounded-lg border border-[#CFC6B8]
+                   bg-[#F4EFE9] focus:outline-none
+                   focus:ring-2 focus:ring-[#8B6B2E]"
+          >
+            <option value="">Seleccionar cliente</option>
+            {% for cliente in clientes %}
+              <option value="{{ cliente.cid }}">
+                {{ cliente.nombre }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- DIRECCIÓN ENTREGA -->
+        <div class="col-span-2">
+          <label class="block text-sm font-semibold mb-1">
+            Dirección de entrega
+          </label>
+          <input
+            type="text"
+            name="direccion_entrega"
+            class="w-full px-3 py-2 rounded-lg border border-[#CFC6B8]
+                   bg-[#F4EFE9] focus:outline-none
+                   focus:ring-2 focus:ring-[#8B6B2E]"
+          >
+          
+        </div>
+
+        <!-- OBSERVACIONES -->
+        <div class="col-span-2">
+          <label class="block text-sm font-semibold mb-1">
+            Observaciones
+          </label>
+          <textarea
+            name="observaciones"
+            rows="3"
+            class="w-full px-3 py-2 rounded-lg border border-[#CFC6B8]
+                   bg-[#F4EFE9] focus:outline-none
+                   focus:ring-2 focus:ring-[#8B6B2E]"
+          ></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PRODUCTOS -->
+    <div class="bg-[#E2DACF] border border-[#CFC6B8] rounded-2xl shadow-md p-6 mb-6">
+
+      <h2 class="text-lg font-bold mb-4">
+        Productos del remito
+      </h2>
+
+      <!-- SELECTOR -->
+      <div class="flex gap-3 mb-4">
+        <select
+          id="producto-select"
+          class="flex-1 px-3 py-2 rounded-lg border border-[#CFC6B8]
+                 bg-[#F4EFE9] focus:outline-none
+                 focus:ring-2 focus:ring-[#8B6B2E]"
+        >
+          <option value="">Seleccionar producto</option>
+          {% for producto in productos %}
+            <option value="{{ producto.pid }}"
+                    data-stock = "{{ producto.stock }}"
+                    >
+              {{ producto.nombre }} (Stock: {{ producto.stock }})
+            </option>
+          {% endfor %}
+        </select>
+
+        <input
+          type="number"
+          id="cantidad-input"
+          min="1"
+          placeholder="Cantidad"
+          class="w-32 px-3 py-2 rounded-lg border border-[#CFC6B8]
+                 bg-[#F4EFE9] focus:outline-none
+                 focus:ring-2 focus:ring-[#8B6B2E]"
+        >
+
+        <button
+          type="button"
+          id="btn-agregar"
+          onclick="agregarProducto()"
+          class="bg-[#8B6B2E] text-white px-4 py-2 rounded-lg
+                 font-semibold hover:bg-[#755824]"
+        >
+          Agregar
+        </button>
+        <p id="error-stock" class="text-red-600 text-sm hidden"></p>
+      </div>
+
+      <!-- LISTA -->
+      <div class="border rounded-lg overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-[#D8CFC2]">
+            <tr>
+              <th class="px-3 py-2 text-left">Producto</th>
+              <th class="px-3 py-2 text-left">Cantidad</th>
+              <th class="px-3 py-2"></th>
+            </tr>
+          </thead>
+          <tbody id="productos-lista" class="divide-y bg-[#F4EFE9]">
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- INPUT OCULTO -->
+    <input type="hidden" name="items" id="items-input">
+
+    <!-- BOTÓN -->
+    <div class="flex justify-end">
+          <button
+          type="submit"
+          onclick="prepararEnvio()"
+          class="bg-[#8B6B2E] text-white px-6 py-3 rounded-xl
+                font-bold hover:bg-[#755824]"
+          >
+          Guardar cambios
+        </button>
+
+  </form>
+</div>
+
+<!-- JS -->
+<script>
+let items = []
+
+const selectProducto = document.getElementById('producto-select')
+const cantidadInput = document.getElementById('cantidad-input')
+const btnAgregar = document.getElementById('btn-agregar')
+const errorStock = document.getElementById('error-stock')
+const lista = document.getElementById('productos-lista')
+
+/* 🔹 devuelve cuánto ya agregamos de ese producto */
+function cantidadYaAgregada(productoId) {
+  return items
+    .filter(i => i.producto_id == productoId)
+    .reduce((acc, i) => acc + i.cantidad, 0)
+}
+
+/* 🔹 actualiza el texto del select mostrando "quedaría X" */
+function actualizarTextoProducto() {
+  const option = selectProducto.options[selectProducto.selectedIndex]
+  if (!option || !option.value) return
+
+  const stockReal = parseInt(option.dataset.stock)
+  const yaAgregado = cantidadYaAgregada(option.value)
+  const cantidad = parseInt(cantidadInput.value) || 0
+
+  const quedaria = stockReal - yaAgregado - cantidad
+
+  const nombre = option.text.split(' (')[0]
+
+  option.text = `${nombre} (Stock: ${stockReal} → quedaría ${Math.max(quedaria, 0)})`
+
+  validarStockActual()
+}
+
+/* 🔹 validación de stock considerando lo ya agregado */
+function validarStockActual() {
+  const productoId = selectProducto.value
+  const cantidad = parseInt(cantidadInput.value)
+
+  if (!productoId || isNaN(cantidad) || cantidad <= 0) {
+    btnAgregar.disabled = false
+    errorStock.classList.add('hidden')
+    return
+  }
+
+  const option = selectProducto.options[selectProducto.selectedIndex]
+  const stockReal = parseInt(option.dataset.stock)
+  const yaAgregado = cantidadYaAgregada(productoId)
+
+  if (cantidad + yaAgregado > stockReal) {
+    btnAgregar.disabled = true
+    errorStock.textContent =
+      `Stock insuficiente. Disponible real: ${stockReal - yaAgregado}`
+    errorStock.classList.remove('hidden')
+  } else {
+    btnAgregar.disabled = false
+    errorStock.classList.add('hidden')
+  }
+}
+
+/* 🔹 agregar producto */
+function agregarProducto() {
+  const productoId = selectProducto.value
+  const cantidad = parseInt(cantidadInput.value)
+
+  if (!productoId || isNaN(cantidad) || cantidad <= 0) return
+
+  const option = selectProducto.options[selectProducto.selectedIndex]
+  const stockReal = parseInt(option.dataset.stock)
+  const yaAgregado = cantidadYaAgregada(productoId)
+
+  if (cantidad + yaAgregado > stockReal) return
+
+  const nombre = option.text.split(' (')[0]
+
+  items.push({
+    producto_id: productoId,
+    cantidad: cantidad
+  })
+
+  const fila = document.createElement('tr')
+  fila.innerHTML = `
+    <td class="px-3 py-2">${nombre}</td>
+    <td class="px-3 py-2">${cantidad}</td>
+    <td class="px-3 py-2 text-right">
+      <button type="button"
+              class="text-red-600 font-semibold"
+              onclick="quitarProducto(this, ${productoId}, ${cantidad})">
+        Quitar
+      </button>
+    </td>
+  `
+
+  lista.appendChild(fila)
+
+  selectProducto.value = ''
+  cantidadInput.value = ''
+  errorStock.classList.add('hidden')
+}
+
+/* 🔹 quitar producto */
+function quitarProducto(btn, productoId, cantidad) {
+  items = items.filter(
+    i => !(i.producto_id == productoId && i.cantidad == cantidad)
+  )
+  btn.closest('tr').remove()
+}
+
+/* 🔹 preparar envío */
+function prepararEnvio() {
+  document.getElementById('items-input').value = JSON.stringify(items)
+}
+
+/* eventos */
+cantidadInput.addEventListener('input', actualizarTextoProducto)
+selectProducto.addEventListener('change', actualizarTextoProducto)
+</script>
+
+
+
+
+{% endblock %}

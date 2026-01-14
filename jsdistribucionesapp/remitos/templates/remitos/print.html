@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Remito {{ remito.rid }}</title>
+
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #000;
+    }
+
+    .remito {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      height: 60px;
+    }
+
+    .titulo {
+      text-align: right;
+    }
+
+    .box {
+      border: 1px solid #000;
+      padding: 6px;
+      margin-bottom: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #000;
+      padding: 4px;
+      text-align: left;
+    }
+
+    .separator {
+      border-top: 2px dashed #000;
+      margin: 20px 0;
+    }
+
+    .tipo {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body onload="window.print()">
+
+{% for tipo in ['ORIGINAL', 'DUPLICADO'] %}
+<div class="remito">
+
+  <div class="header">
+    <img
+      src="{{ url_for('static', filename='uploads/productos/logo.jpeg') }}"
+      class="logo"
+    >
+
+    <div class="titulo">
+      <h2>REMITO</h2>
+      <strong>N° {{ remito.rid }}</strong><br>
+      <strong>{{ tipo }}</strong>
+    </div>
+  </div>
+
+  <div class="box">
+    <strong>Cliente:</strong> {{ remito.cliente.nombre }}<br>
+    <strong>Dirección:</strong> {{ remito.direccion_entrega or '-' }}<br>
+    <strong>Fecha:</strong> {{ remito.fecha.strftime('%d/%m/%Y') if remito.fecha }}
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in remito.items %}
+      <tr>
+        <td>{{ item.producto.nombre }}</td>
+        <td>{{ item.cantidad }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="box">
+    <strong>Observaciones:</strong><br>
+    {{ remito.observaciones or '-' }}
+  </div>
+
+</div>
+
+{% if not loop.last %}
+<div class="separator"></div>
+{% endif %}
+{% endfor %}
+
+</body>
+</html>

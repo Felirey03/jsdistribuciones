@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-4">
+    Historial de stock — {{ producto.nombre }}
+</h1>
+
+<a href="{{ url_for('productos.editar', id=producto.pid) }}"
+   class="text-blue-600 underline mb-4 inline-block">
+    ← Volver al producto
+</a>
+
+<table class="min-w-full bg-white border">
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="px-3 py-2 text-left">Fecha</th>
+            <th class="px-3 py-2">Tipo</th>
+            <th class="px-3 py-2">Cantidad</th>
+            <th class="px-3 py-2">Motivo</th>
+            <th class="px-3 py-2">Referencia</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mov in movimientos %}
+        <tr class="border-t">
+            <td class="px-3 py-2">
+                {{ mov.fecha.strftime('%d/%m/%Y %H:%M') }}
+            </td>
+
+            <td class="px-3 py-2 text-center">
+                {% if mov.tipo == 'SALIDA' %}
+                    <span class="text-red-600 font-semibold">− SALIDA</span>
+                {% else %}
+                    <span class="text-green-600 font-semibold">+ ENTRADA</span>
+                {% endif %}
+            </td>
+
+            <td class="px-3 py-2 text-center">
+                {{ mov.cantidad }}
+            </td>
+
+            <td class="px-3 py-2">
+                {{ mov.motivo }}
+            </td>
+
+            <td class="px-3 py-2">
+                {{ mov.referencia or '-' }}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" class="text-center py-4 text-gray-500">
+                No hay movimientos registrados
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+<div class="max-w-4xl mx-auto mt-6">
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">
+      Remito Nº {{ remito.rid }}
+    </h1>
+
+    <span class="px-3 py-1 rounded-full text-sm font-semibold
+      {% if remito.estado == 'CONFIRMADO' %}
+        bg-green-200 text-green-800
+      {% else %}
+        bg-yellow-200 text-yellow-800
+      {% endif %}
+    ">
+      {{ remito.estado }}
+    </span>
+  </div>
+
+  <!-- DATOS -->
+  <div class="bg-[#E2DACF] p-6 rounded-2xl mb-6">
+    <p><strong>Fecha:</strong> {{ remito.fecha }}</p>
+    <p><strong>Cliente:</strong> {{ remito.cliente.nombre }}</p>
+    <p><strong>Dirección entrega:</strong> {{ remito.direccion_entrega }}</p>
+    <p><strong>Observaciones:</strong> {{ remito.observaciones or '-' }}</p>
+  </div>
+
+  <!-- PRODUCTOS -->
+  <div class="bg-[#E2DACF] p-6 rounded-2xl mb-6">
+    <h2 class="font-bold mb-3">Productos</h2>
+
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b">
+          <th class="text-left">Producto</th>
+          <th>Cantidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in remito.items %}
+        <tr class="border-b">
+          <td>{{ item.producto.nombre }}</td>
+          <td class="text-center">{{ item.cantidad }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ACCIONES -->
+  <div class="flex gap-3">
+
+    {% if remito.estado == 'BORRADOR' %}
+      <form method="post" action="{{ url_for('remitos.confirmar', id=remito.rid) }}">
+        <button class="bg-green-600 text-white px-4 py-2 rounded-lg">
+          Confirmar remito
+        </button>
+      </form>
+
+      <form method="post" action="{{ url_for('remitos.eliminar', id=remito.rid) }}">
+        <button class="bg-red-600 text-white px-4 py-2 rounded-lg">
+          Eliminar
+        </button>
+      </form>
+
+      <form method="post" action="{{ url_for('remitos.editar', id=remito.rid) }}">
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+          Editar
+        </button>
+      </form>
+
+      
+    {% endif %}
+
+    <a href="{{ url_for('remitos.print', id=remito.rid) }}"
+    target="_blank"
+    class="bg-gray-700 text-white px-4 py-2 rounded-lg">
+    Imprimir
+  </a>
+
+    <a href="{{ url_for('remitos.index') }}"
+       class="px-4 py-2 rounded-lg border">
+      Volver
+    </a>
+
+  </div>
+
+</div>
+
+
+{% endblock %}
