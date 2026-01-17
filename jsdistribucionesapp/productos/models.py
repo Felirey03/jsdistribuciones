@@ -8,6 +8,7 @@ class Producto(db.Model):
     precio = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, default=0)
     departamento = db.Column(db.String)
+    activo = db.Column(db.Boolean, default=True)
 
     
 

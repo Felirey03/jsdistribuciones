@@ -89,6 +89,19 @@
         >
       </div>
 
+      <div class="flex items-center gap-2 mt-4">
+        <input
+          type="checkbox"
+          name="activo"
+          id="activo"
+          class="rounded border-gray-300"
+          {% if producto.activo %}checked{% endif %}
+        >
+        <label for="activo" class="text-sm font-semibold">
+          Producto activo
+        </label>
+      </div>
+
       <a href="{{ url_for('movimiento_stock.historial_producto', producto_id=producto.pid) }}"
           class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">
             📊 Ver historial de stock

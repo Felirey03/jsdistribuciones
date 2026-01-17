@@ -30,7 +30,7 @@ def index():
 @remitos.route('/agregar', methods=['GET', 'POST'])
 def agregar():
     clientes = Cliente.query.filter_by(activo=True).all()
-    productos = Producto.query.all()
+    productos = Producto.query.filter_by(activo=True).all()
 
     if request.method == 'POST':
         fecha = request.form.get('fecha')

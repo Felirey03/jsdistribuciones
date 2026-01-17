@@ -90,6 +90,18 @@
         <span>{{ producto.stock }}</span>
         <span>${{ producto.precio }}</span>
 
+        <td>
+          {% if producto.activo %}
+            <span class="px-2 py-1 text-xs rounded-full bg-green-200 text-green-800">
+              Activo
+            </span>
+          {% else %}
+            <span class="px-2 py-1 text-xs rounded-full bg-red-200 text-red-800">
+              Inactivo
+            </span>
+          {% endif %}
+        </td>
+
         <a href="{{ url_for('productos.editar', id=producto.pid) }}"
            class="text-[#8B6B2E] font-semibold hover:underline">
           Editar

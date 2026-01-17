@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, render_template, url_for
+from flask import Blueprint, request, redirect, render_template, url_for, flash
 
 #importamos base de datos y el modelo de la base de datos
 from jsdistribucionesapp.app import db
@@ -46,7 +46,12 @@ def editar(id):
         producto.departamento = request.form.get('departamento')
         producto.precio = request.form.get('precio')
         producto.stock = request.form.get('stock')
+        producto.activo = True if request.form.get('activo') == 'on' else False
 
+    
+        flash('Producto actualizado correctamente', 'success')
+    
+        
         db.session.commit()
         return redirect(url_for("productos.index"))
     
@@ -58,10 +63,22 @@ def editar(id):
 def eliminar(id):
     producto = Producto.query.get_or_404(id)
 
+    if producto.movimientos_stock:
+        producto.activo = False
+        db.session.commit()
+
+        flash(
+            'El producto tiene movimientos de stock y fue desactivado '
+            '(no puede eliminarse).',
+            'info'
+        )
+        return redirect(url_for('productos.index'))
+
     db.session.delete(producto)
     db.session.commit()
 
-    return redirect(url_for('productos.index'))    
+    flash('Producto eliminado definitivamente', 'success')
+    return redirect(url_for('productos.index'))   
 
 
 @productos.route('/cambiar-precio', methods=['POST'])
