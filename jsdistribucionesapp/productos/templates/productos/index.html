@@ -90,13 +90,13 @@
         <span>{{ producto.stock }}</span>
         <span>${{ producto.precio }}</span>
 
-        <td>
+        <td class="text-center align-middle">
           {% if producto.activo %}
-            <span class="px-2 py-1 text-xs rounded-full bg-green-200 text-green-800">
+            <span class="inline-flex items-center justify-center px-1.5 py-0.5 text-sm rounded-full bg-green-200 text-green-800">
               Activo
             </span>
           {% else %}
-            <span class="px-2 py-1 text-xs rounded-full bg-red-200 text-red-800">
+            <span class="inline-flex items-center justify-center px-1.5 py-0.5 text-sm rounded-full bg-red-200 text-red-800">
               Inactivo
             </span>
           {% endif %}
