@@ -1,11 +1,19 @@
-from jsdistribucionesapp.app import create_app, db
+import os
+import sys
+import webbrowser
+from jsdistribucionesapp import create_app
 
-flask_app = create_app()
+def resource_path(relative_path):
+    """ Soporta PyInstaller """
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
 
-with flask_app.app_context():
-    db.create_all()
-    print("base de datos creada")
+    return os.path.join(base_path, relative_path)
 
-if __name__ == '__main__':
-    flask_app.run(host='0.0.0.0', port=5000, debug=True)
+app = create_app()
 
+if __name__ == "__main__":
+    webbrowser.open("http://127.0.0.1:5000")
+    app.run(host="127.0.0.1", port=5000)
