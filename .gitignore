@@ -1,2 +1,14 @@
+# Bases de datos
 instance/*.db
 *.db
+
+# Backups
+backups/
+
+# Python
+__pycache__/
+*.pyc
+
+# Entornos virtuales
+venv/
+.env
