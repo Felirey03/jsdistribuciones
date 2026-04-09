@@ -127,6 +127,7 @@
                 <div class="logo">
                     <img
                         src="{{ url_for('static', filename='uploads/productos/logo.jpeg') }}"
+                        alt="Logo"
                     />
                 </div>
 
@@ -162,29 +163,32 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% set total = 0 %} {% for item in remito.items %} {% set
-                    subtotal = item.cantidad * item.producto.precio %} {% set
-                    total = total + subtotal %}
-                    <tr>
-                        <td class="cantidad">{{ item.cantidad }}</td>
-                        <td class="producto">{{ item.producto.nombre }}</td>
-                        <td class="precio">
-                            $ {{ "%.2f"|format(item.producto.precio) }}
-                        </td>
-                        <td class="subtotal">
-                            $ {{ "%.2f"|format(subtotal) }}
-                        </td>
-                    </tr>
+                    {% set ns = namespace(total=0) %}
+                    {% for item in remito.items %}
+                        {% set subtotal = item.cantidad * item.producto.precio %}
+                        {% set ns.total = ns.total + subtotal %}
+                        <tr>
+                            <td class="cantidad">{{ item.cantidad }}</td>
+                            <td class="producto">{{ item.producto.nombre }}</td>
+                            <td class="precio">
+                                $ {{ "%.2f"|format(item.producto.precio) }}
+                            </td>
+                            <td class="subtotal">
+                                $ {{ "%.2f"|format(subtotal) }}
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
 
             <!-- TOTAL -->
             <div class="total">
-                TOTAL A COBRAR: $ {{ "%.2f"|format(total) }}
+                TOTAL A COBRAR: $ {{ "%.2f"|format(ns.total) }}
             </div>
 
-            <div class="footer">Documento no válido como factura</div>
+            <div class="footer">
+                Documento no válido como factura
+            </div>
         </div>
 
         {% endfor %}
